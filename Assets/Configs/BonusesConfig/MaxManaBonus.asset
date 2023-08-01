@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f77d23674a84e1d8c77fe69d4fa6cbc, type: 3}
+  m_Name: MaxManaBonus
+  m_EditorClassIdentifier: 
+  _bonusIcon: {fileID: 21300000, guid: 7e6fcef3a4fcd864d9915c91d67dcc57, type: 3}
+  _bonusName: Max Mana
+  _bonusDescription: Increase max amount your mana
+  _bonusType: 1
+  _effectType: 3
+  _percent: 0.29999998

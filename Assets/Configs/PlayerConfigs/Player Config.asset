@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3623aa6ed044269a56d0409c8bdcbe4, type: 3}
+  m_Name: Player Config
+  m_EditorClassIdentifier: 
+  _attackConfig: {fileID: 11400000, guid: 4d5e66f43a38b584ca99c82d925b4e71, type: 2}
+  _blockConfig: {fileID: 11400000, guid: 23e062d169265d14d8ac61419c79e224, type: 2}
+  _escapeConfig: {fileID: 11400000, guid: 53d73cd2ea82e7142a6a022d23330abc, type: 2}
+  _goldAmount: 0
+  _health: 100
