@@ -8,9 +8,16 @@ namespace MobileRpg.UI
 {
     public class ActionsResultHandler : MonoBehaviour
     {
-        [SerializeField] private MonstersBehaviour _monstersBehaviour;
+        
         [SerializeField] private TMP_Text _messageText;
         [SerializeField] private float _timeForTextDisplaying;
+
+        private MonstersBehaviour _monstersBehaviour;
+        
+        private void Awake()
+        {
+            _monstersBehaviour = GameBehaviour.Instance.MonstersBehaviour;
+        }
 
         private void OnEnable()
         {

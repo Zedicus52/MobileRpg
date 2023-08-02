@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 namespace MobileRpg.Monsters
 {
-    [RequireComponent(typeof(HealthBar))]
+    [RequireComponent(typeof(ValueBar))]
     [RequireComponent(typeof(NavMeshAgent))]
     public class Monster : MonoBehaviour, IEntity
     {
@@ -23,7 +23,7 @@ namespace MobileRpg.Monsters
         private float _currentDamage;
         private int _currentGoldAmount;
 
-        private HealthBar _healthBar;
+        private ValueBar _valueBar;
         private NavMeshAgent _navMeshAgent;
         private Transform _transform;
         private IAttackConfig _attackConfig;
@@ -38,7 +38,7 @@ namespace MobileRpg.Monsters
             _currentGoldAmount = goldAmount;
             _attackConfig = config;
             
-            _healthBar.Initialize(0, _currentHealth);
+            _valueBar.Initialize(0, _currentHealth);
             _navMeshAgent.SetDestination(destinationPoint);
             _finishPath = false;
             _animator.SetBool(IsMoving,true);
@@ -46,14 +46,14 @@ namespace MobileRpg.Monsters
         
         private void Awake()
         {
-            _healthBar = GetComponent<HealthBar>();
+            _valueBar = GetComponent<ValueBar>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _transform = GetComponent<Transform>();
         }
         
         private void OnEnable()
         {
-            HealthChanged += _healthBar.OnValueChanged;
+            HealthChanged += _valueBar.OnValueChanged;
         }
 
         private void FixedUpdate()
@@ -71,7 +71,7 @@ namespace MobileRpg.Monsters
 
         private void OnDisable()
         {
-            HealthChanged -= _healthBar.OnValueChanged;
+            HealthChanged -= _valueBar.OnValueChanged;
         }
         
         

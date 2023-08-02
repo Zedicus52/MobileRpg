@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 namespace MobileRpg.Core
 {
-    public class HealthBar : MonoBehaviour
+    public class ValueBar : MonoBehaviour
     {
-        [SerializeField] private Slider _slider;
+        [SerializeField] protected Slider _slider;
 
         public void Initialize(float minValue, float maxValue)
         {

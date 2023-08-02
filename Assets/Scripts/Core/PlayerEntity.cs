@@ -38,6 +38,8 @@ namespace MobileRpg.Core
             _playerConfig = playerConfig;
             _currentHealth = _playerConfig.GetHealth;
             _maxHealth = _playerConfig.GetHealth;
+            _maxMana = _playerConfig.GetMana;
+            _currentMana = _playerConfig.GetMana;
             _escapeChance = playerConfig.GetEscapeConfig().GetChanceToEscape();
             _currentGoldAmount = 0;
         }

@@ -17,7 +17,7 @@ namespace MobileRpg.UI
         [SerializeField] private Color _receivedColor;
 
         private Dictionary<BonusType, List<BonusDisplay>> _bonuses;
-        private int _receivedBonusCount;
+        private int _receivedBonusCount;    
 
         private void Awake()
         {
@@ -67,17 +67,25 @@ namespace MobileRpg.UI
                 foreach (var bonus in bonuse.Value)
                 {
                     bonus.Click -= OnBonusClick;
+                    Destroy(bonus.gameObject);
                 }
             }
             
             _bonuses.Clear();
+            _bonuses = new Dictionary<BonusType, List<BonusDisplay>>
+            {
+                { BonusType.Health, new List<BonusDisplay>() },
+                { BonusType.Mana , new List<BonusDisplay>()},
+                { BonusType.Escape, new List<BonusDisplay>()}
+            };
             _bonusGiver.EndInteraction();
+            _receivedBonusCount = 0;
         }
 
         private void OnBonusClick(BonusConfig config)
         {
             _bonuses.TryGetValue(config.BonusType, out var bonuses);
-            if (bonuses.Count > 0)
+            if (bonuses?.Count > 0)
             {
                 foreach (var bonusDisplay in bonuses)
                 {

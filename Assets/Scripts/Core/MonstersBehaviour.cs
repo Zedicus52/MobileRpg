@@ -4,52 +4,62 @@ using System.Linq;
 using MobileRpg.Interfaces;
 using MobileRpg.Monsters;
 using MobileRpg.States;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace MobileRpg.Core
 {
-    public class MonstersBehaviour : MonoBehaviour , IStateSwitcher
+    public class MonstersBehaviour : IStateSwitcher
     {
         public event Action SuccesfullEscapeFromMonster; 
         public event Action FailtureEscapeFromMonster;
-        
 
-        public event Action<BaseState> StateChangedToWait; 
+        public event Action<BaseState> StateChangedToWait;
+        public event Action<Monster> MonsterSpawned;
+        public event Action<Monster> EscapeFromMonster;
         public IEntity CurrentMonster => _currentMonster;
-
-        [SerializeField] private PlayerBehaviour _playerBehaviour;
-        [SerializeField] private WavesHandler _wavesHandler;
+        
+        private readonly IWavesHandler _wavesHandler;
 
         private Monster _currentMonster;
-        private IEntity _playerEntity;
+        private readonly IEntity _playerEntity;
+        private readonly PlayerBehaviour _playerBehaviour;
         private BaseState _currentState;
         private List<BaseState> _allStates;
-        
 
-        private void Start()
+
+        public MonstersBehaviour(PlayerBehaviour playerBehaviour, IWavesHandler handler)
+        {
+            _playerEntity = playerBehaviour.PlayerEntity;
+            _playerBehaviour = playerBehaviour;
+            _wavesHandler = handler;
+        }
+
+
+        public void Subscribe()
+        {
+            _playerBehaviour.StateChanged += OnPlayerStateChanged;
+            _wavesHandler.WavesSpawningStarted += Start;
+            _wavesHandler.WavesSpawningResume += Start;
+        }
+
+        public void UnSubscribe()
+        {
+            _playerBehaviour.StateChanged -= OnPlayerStateChanged;
+            _wavesHandler.WavesSpawningStarted -= Start;
+            _wavesHandler.WavesSpawningResume -= Start;
+        }
+
+        public void Start()
         {
             if (_currentMonster == null)
                 CreateNewMonster();
             
-            _playerEntity = _playerBehaviour.PlayerEntity;
-            _currentMonster.HasReachedDestinationPoint += _playerBehaviour.OnMonsterReachedFightPosition;
-            _currentMonster.MonsterDie += _playerBehaviour.OnMonsterDie;
             _allStates = new List<BaseState>()
             {
                 new WaitState(this, _currentMonster),
                 new AttackState(this, _playerEntity, _currentMonster.AttackConfig)
             };
             _currentState = _allStates[0];
-        }
-
-        private void OnEnable()
-        {
-            _playerBehaviour.StateChanged += OnPlayerStateChanged;
-        }
-
-        private void OnDisable()
-        {
-            _playerBehaviour.StateChanged -= OnPlayerStateChanged;
         }
 
         private void OnPlayerStateChanged(BaseState playerState, bool killedMonster)
@@ -84,13 +94,10 @@ namespace MobileRpg.Core
             if (_currentMonster != obj) 
                 return;
             
-            
             SwitchState<WaitState>();
 
             obj.MonsterDie -= OnMonsterDie;
-            obj.HasReachedDestinationPoint -= _playerBehaviour.OnMonsterReachedFightPosition;
-            obj.MonsterDie -= _playerBehaviour.OnMonsterDie;
-            Destroy(obj.gameObject);
+            Object.Destroy(obj.gameObject);
             CreateNewMonster();
         }
 
@@ -98,9 +105,8 @@ namespace MobileRpg.Core
         {
             SwitchState<WaitState>();
             _currentMonster.MonsterDie -= OnMonsterDie;
-            _currentMonster.HasReachedDestinationPoint -= _playerBehaviour.OnMonsterReachedFightPosition;
-            _currentMonster.MonsterDie -= _playerBehaviour.OnMonsterDie;
-            Destroy(_currentMonster.gameObject);
+            EscapeFromMonster?.Invoke(_currentMonster);
+            Object.Destroy(_currentMonster.gameObject);
             CreateNewMonster();
         }
 
@@ -112,9 +118,9 @@ namespace MobileRpg.Core
                 return;
             
             _currentMonster.MonsterDie += OnMonsterDie;
-            _currentMonster.MonsterDie += _playerBehaviour.OnMonsterDie;
-            if (_playerBehaviour != null)
-                _currentMonster.HasReachedDestinationPoint += _playerBehaviour.OnMonsterReachedFightPosition;
+            MonsterSpawned?.Invoke(_currentMonster);
+
+            _currentMonster.MonsterDie += OnMonsterDie;
         }
 
         public void SwitchState<T>() where T : BaseState

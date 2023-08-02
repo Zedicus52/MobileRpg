@@ -10,10 +10,12 @@ namespace MobileRpg.ScriptableObjects
         [SerializeField] private PlayerEscapeConfig _escapeConfig;
         [SerializeField] private int _goldAmount;
         [SerializeField] private float _health;
+        [SerializeField] private float _mana;
 
         public PlayerAttackConfig GetAttackConfig() => _attackConfig;
         public PlayerBlockConfig GetBlockConfig() => _blockConfig;
         public PlayerEscapeConfig GetEscapeConfig() => _escapeConfig;
         public float GetHealth => _health;
+        public float GetMana => _mana;
     }
 }

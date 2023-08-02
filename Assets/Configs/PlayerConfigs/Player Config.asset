@@ -17,3 +17,4 @@ MonoBehaviour:
   _escapeConfig: {fileID: 11400000, guid: 53d73cd2ea82e7142a6a022d23330abc, type: 2}
   _goldAmount: 0
   _health: 100
+  _mana: 100

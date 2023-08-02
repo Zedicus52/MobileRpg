@@ -8,12 +8,16 @@ namespace MobileRpg.UI
 {
     public class ActionButtonsHolder : MonoBehaviour
     {
-        [SerializeField] private PlayerBehaviour _playerBehaviour;
-
         [Header("Buttons")] 
         [SerializeField] private Button _attackButton;
         [SerializeField] private Button _magicAttackButton;
         [SerializeField] private Button _escapeButton;
+
+        private PlayerBehaviour _playerBehaviour;
+        private void Awake()
+        {
+            _playerBehaviour = GameBehaviour.Instance.PlayerBehaviour;
+        }
 
         private void OnEnable()
         {

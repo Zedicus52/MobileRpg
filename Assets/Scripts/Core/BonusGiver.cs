@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MobileRpg.Enums;
+using MobileRpg.Interfaces;
 using MobileRpg.ScriptableObjects;
 using UnityEngine;
 
@@ -9,29 +10,45 @@ namespace MobileRpg.Core
     public class BonusGiver : MonoBehaviour
     {
         public event Action<List<BonusConfig>> ShowBonuses;
-        [SerializeField] private PlayerBehaviour _playerBehaviour;
         [SerializeField] private List<BonusConfig> _bonuses;
-        [SerializeField] private WavesHandler _wavesHandler;
+        private PlayerBehaviour _playerBehaviour;
+        private IWavesHandler _wavesHandler;
+
+        private void Awake()
+        {
+            _playerBehaviour = GameBehaviour.Instance.PlayerBehaviour;
+            _wavesHandler = GameBehaviour.Instance.WavesHandler;
+        }
 
         private void OnEnable()
         {
-            _wavesHandler.WavesAreOver += OnWaveAreOver;
+            _wavesHandler.NewWaveStarts += OnNewWaveStarts;
         }
 
         private void OnDisable()
         {
-            _wavesHandler.WavesAreOver -= OnWaveAreOver;
+            _wavesHandler.NewWaveStarts -= OnNewWaveStarts;
         }
 
 
-        private void OnWaveAreOver()
+        private void OnNewWaveStarts(int wave)
         {
-            ShowBonuses?.Invoke(_bonuses);
+            Debug.Log("Wave: "+ wave);
+            if(wave == 0)
+                return;
+            
+            if (wave % 3 == 0)
+            {
+                
+                ShowBonuses?.Invoke(_bonuses);
+                _wavesHandler.PauseWavesSpawning();
+            }
+                
         }
 
         public void EndInteraction()
         {
-            
+            _wavesHandler.ResumeWavesSpawning();
         }
 
         public void GiveBonus(BonusConfig config)

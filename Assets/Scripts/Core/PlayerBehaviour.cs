@@ -5,59 +5,78 @@ using MobileRpg.Interfaces;
 using MobileRpg.Monsters;
 using MobileRpg.ScriptableObjects;
 using MobileRpg.States;
-using UnityEngine;
 
 namespace MobileRpg.Core
 {
-    public class PlayerBehaviour : MonoBehaviour, IStateSwitcher
+    public class PlayerBehaviour : IStateSwitcher
     {
         public event Action<BaseState, bool> StateChanged;
-        public PlayerEntity PlayerEntity => _playerEntity;
+        public PlayerEntity PlayerEntity { get; private set; }
         
-        [SerializeField] private MonstersBehaviour _monstersBehaviour;
-        [SerializeField] private PlayerConfig _playerConfig;
-        [SerializeField] private HealthBar _healthBar;
         
-        private PlayerEntity _playerEntity;
-        private IEntity _monster;
+        private readonly PlayerConfig _playerConfig;
+
+        private Monster _monster;
+        private MonstersBehaviour _monstersBehaviour;
         private BaseState _currentState;
         private List<BaseState> _allStates;
         private bool _canInteractWithMonster;
         private bool _killedMonster;
 
-        private void Awake()
-        {
-            _playerEntity = new PlayerEntity(_playerConfig);
-            _healthBar.Initialize(0.0f,_playerConfig.GetHealth);
-        }
 
-        private void Start()
+        public PlayerBehaviour(PlayerConfig config)
         {
+            _playerConfig = config;
             _canInteractWithMonster = false;
-            _monster = _monstersBehaviour.CurrentMonster;
-            _allStates = new List<BaseState>()
-            {
-                new AttackState(this, _monster, _playerConfig.GetAttackConfig()),
-                new MagicAttackState(this, _monster),
-                new EscapeState(this, _playerEntity, _monster),
-                new WaitState(this, _playerEntity)
-            };
-            _currentState = _allStates[0];
+            PlayerEntity = new PlayerEntity(_playerConfig);
+        }
+        
+        public void InitializeMonsterBehaviour(MonstersBehaviour behaviour)
+        {
+            _monstersBehaviour = behaviour;
         }
 
-        private void OnEnable()
+        public void Subscribe()
         {
             _monstersBehaviour.StateChangedToWait += OnMonsterStateChangedToWait;
-            _playerEntity.HealthChanged += _healthBar.OnValueChanged;
-            _playerEntity.MaxHealthChanged += _healthBar.UpdateMaxValue;
+            _monstersBehaviour.EscapeFromMonster += EscapeFromMonster;
+            _monstersBehaviour.MonsterSpawned += OnNewMonsterSpawned;
         }
-
         
-        private void OnDisable()
+
+        public void UnSubscribe()
         {
             _monstersBehaviour.StateChangedToWait -= OnMonsterStateChangedToWait;
-            _playerEntity.HealthChanged -= _healthBar.OnValueChanged;
-            _playerEntity.MaxHealthChanged -= _healthBar.UpdateMaxValue;
+            _monstersBehaviour.EscapeFromMonster -= EscapeFromMonster;
+            _monstersBehaviour.MonsterSpawned -= OnNewMonsterSpawned;
+        }
+        
+        private void OnNewMonsterSpawned(Monster newMonster)
+        {
+            if(newMonster == null)
+                return;
+
+            if (_monster != null)
+            {
+                _monster.HasReachedDestinationPoint -= OnMonsterReachedFightPosition;
+                _monster.MonsterDie -= OnMonsterDie;
+            }
+
+            _monster = newMonster;
+            _monster.HasReachedDestinationPoint += OnMonsterReachedFightPosition;
+            _monster.MonsterDie += OnMonsterDie;
+            
+            if(_allStates == null)
+                InitializeStates();
+        }
+        
+        private void EscapeFromMonster(Monster monster)
+        {
+            if (_monster == null) 
+                return;
+            
+            _monster.HasReachedDestinationPoint -= OnMonsterReachedFightPosition;
+            _monster.MonsterDie -= OnMonsterDie;
         }
         
         
@@ -111,7 +130,7 @@ namespace MobileRpg.Core
             StateChanged?.Invoke(_currentState, _killedMonster);
         }
 
-        public void OnMonsterReachedFightPosition(IEntity entity)
+        private void OnMonsterReachedFightPosition(IEntity entity)
         {
              _canInteractWithMonster = true;
              _killedMonster = false;
@@ -122,14 +141,24 @@ namespace MobileRpg.Core
              }
         }
 
-        public void OnMonsterDie(Monster entity)
+        private void OnMonsterDie(Monster entity)
         {
             _killedMonster = true;
             _canInteractWithMonster = false;
-            _playerEntity.AddGold(entity.GoldAmount);
+            PlayerEntity.AddGold(entity.GoldAmount);
             SwitchState<AttackState>();
         }
-        
 
+        private void InitializeStates()
+        {
+            _allStates = new List<BaseState>()
+            {
+                new AttackState(this, _monster, _playerConfig.GetAttackConfig()),
+                new MagicAttackState(this, _monster),
+                new EscapeState(this, PlayerEntity, _monster),
+                new WaitState(this, PlayerEntity)
+            };
+            _currentState = _allStates[0];
+        }
     }
 }
