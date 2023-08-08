@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b3868b5d8945dfa32e70d493f52408, type: 3}
+  m_Name: WindBlade
+  m_EditorClassIdentifier: 
+  _id: 6
+  _name: Wind Blade
+  _description: Creates a sharp stream of air that cuts off a portion of the target's
+    health.
+  _icon: {fileID: 21300000, guid: 57b9783c6d8445448a29d0e30a5f23a3, type: 3}
+  _manaCost: 33
+  _minDamage: 23
+  _maxDamage: 35
+  _applyStepsCount: 1
+  _spellType: 0

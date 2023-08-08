@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Player Config
   m_EditorClassIdentifier: 
   _attackConfig: {fileID: 11400000, guid: 4d5e66f43a38b584ca99c82d925b4e71, type: 2}
-  _blockConfig: {fileID: 11400000, guid: 23e062d169265d14d8ac61419c79e224, type: 2}
   _escapeConfig: {fileID: 11400000, guid: 53d73cd2ea82e7142a6a022d23330abc, type: 2}
+  _magicConfig: {fileID: 11400000, guid: 66034a43ba94eff4a81793e540509372, type: 2}
   _goldAmount: 0
   _health: 100
-  _mana: 100

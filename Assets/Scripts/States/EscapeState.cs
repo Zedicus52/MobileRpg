@@ -1,6 +1,7 @@
 using MobileRpg.Core;
 using MobileRpg.Interfaces;
 using MobileRpg.Monsters;
+using MobileRpg.Player;
 using UnityEngine;
 
 namespace MobileRpg.States

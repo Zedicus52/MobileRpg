@@ -1,6 +1,7 @@
 using System;
 using MobileRpg.Core;
 using MobileRpg.Interfaces;
+using MobileRpg.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -91,5 +92,6 @@ namespace MobileRpg.Monsters
             
             return (_navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance);
         }
+        
     }
 }

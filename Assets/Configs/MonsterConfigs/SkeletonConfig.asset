@@ -15,7 +15,7 @@ MonoBehaviour:
   _prefab: {fileID: 9078151990798182644, guid: 7221741eb897d9a42b4c336af9a1d882, type: 3}
   _monsterType: 0
   _maxHealth: 25
-  _minHealth: 15
+  _minHealth: 20
   _maxDamage: 10
   _minDamage: 5
   _maxGoldAmount: 15

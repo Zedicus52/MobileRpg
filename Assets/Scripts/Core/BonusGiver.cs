@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MobileRpg.Enums;
 using MobileRpg.Interfaces;
+using MobileRpg.Player;
 using MobileRpg.ScriptableObjects;
 using UnityEngine;
 
@@ -33,17 +34,14 @@ namespace MobileRpg.Core
 
         private void OnNewWaveStarts(int wave)
         {
-            Debug.Log("Wave: "+ wave);
             if(wave == 0)
                 return;
             
             if (wave % 3 == 0)
             {
-                
                 ShowBonuses?.Invoke(_bonuses);
                 _wavesHandler.PauseWavesSpawning();
             }
-                
         }
 
         public void EndInteraction()

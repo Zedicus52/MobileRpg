@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b3868b5d8945dfa32e70d493f52408, type: 3}
+  m_Name: ArrowOfDecay
+  m_EditorClassIdentifier: 
+  _id: 5
+  _name: Arrow of Decay
+  _description: Throw arrow
+  _icon: {fileID: 21300000, guid: 1f5de622ff473dc43b8a4d774b5a2a2d, type: 3}
+  _manaCost: 22
+  _minDamage: 15
+  _maxDamage: 25
+  _applyStepsCount: 1
+  _spellType: 0

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 1918120207877746775, guid: 712b316f116433c4e92d747c78679f10, type: 3}
   _monsterType: 1
-  _maxHealth: 28
-  _minHealth: 18
+  _maxHealth: 25
+  _minHealth: 20
   _maxDamage: 12
   _minDamage: 6
   _maxGoldAmount: 18

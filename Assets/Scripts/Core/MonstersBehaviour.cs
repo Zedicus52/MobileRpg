@@ -1,14 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MobileRpg.Enums;
 using MobileRpg.Interfaces;
+using MobileRpg.Models;
 using MobileRpg.Monsters;
+using MobileRpg.Player;
+using MobileRpg.ScriptableObjects;
 using MobileRpg.States;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace MobileRpg.Core
 {
-    public class MonstersBehaviour : IStateSwitcher
+    public class MonstersBehaviour : IStateSwitcher, IEffectable
     {
         public event Action SuccesfullEscapeFromMonster; 
         public event Action FailtureEscapeFromMonster;
@@ -25,6 +30,7 @@ namespace MobileRpg.Core
         private readonly PlayerBehaviour _playerBehaviour;
         private BaseState _currentState;
         private List<BaseState> _allStates;
+        private readonly List<SpellModel> _appliedSpells;
 
 
         public MonstersBehaviour(PlayerBehaviour playerBehaviour, IWavesHandler handler)
@@ -32,9 +38,9 @@ namespace MobileRpg.Core
             _playerEntity = playerBehaviour.PlayerEntity;
             _playerBehaviour = playerBehaviour;
             _wavesHandler = handler;
+            _appliedSpells = new List<SpellModel>();
         }
-
-
+        
         public void Subscribe()
         {
             _playerBehaviour.StateChanged += OnPlayerStateChanged;
@@ -49,7 +55,7 @@ namespace MobileRpg.Core
             _wavesHandler.WavesSpawningResume -= Start;
         }
 
-        public void Start()
+        private void Start()
         {
             if (_currentMonster == null)
                 CreateNewMonster();
@@ -66,6 +72,11 @@ namespace MobileRpg.Core
         {
             if(killedMonster)
                 return;
+            
+            if(playerState is not AttackState)
+            {
+                ApplySpells();
+            }
             
             SwitchState<AttackState>();
 
@@ -95,6 +106,8 @@ namespace MobileRpg.Core
                 return;
             
             SwitchState<WaitState>();
+            
+            RemoveAllSpells();
 
             obj.MonsterDie -= OnMonsterDie;
             Object.Destroy(obj.gameObject);
@@ -131,6 +144,57 @@ namespace MobileRpg.Core
             if(_currentState is WaitState)
                 StateChangedToWait?.Invoke(_currentState);
         }
-        
+
+        private void ApplySpells()
+        {
+            foreach (var spell in _appliedSpells)
+            {
+                Debug.Log($"Apply spell with name: {spell.Config.Name}");
+                if (spell.CanApplySpell())
+                {
+                    if(spell.SpellType == SpellType.DisposableActive || spell.SpellType == SpellType.ReusableActive)
+                        _currentMonster.TakeDamage(spell.Config.GetDamage());
+                    
+                    spell.ApplySpell();
+                }
+            }
+
+            _appliedSpells.RemoveAll(s => s.CanApplySpell() == false);
+        }
+
+        public void AddSpell(SpellModel config)
+        {
+            var first = _appliedSpells.FirstOrDefault(s => s.Id == config.Id);
+            if(first != null)
+                return;
+
+            if (config.SpellType == SpellType.DisposableActive)
+            {
+                ApplyDisposableSpell(config);
+                return;
+            }
+            
+            _appliedSpells.Add(config);
+        }
+
+        private void ApplyDisposableSpell(SpellModel config)
+        {
+            if(config.SpellType == SpellType.DisposableActive)
+                _currentMonster.TakeDamage(config.Config.GetDamage());
+        }
+
+        public void RemoveSpell(SpellModel config)
+        {
+            var first = _appliedSpells.FirstOrDefault(s => s.Id == config.Id);
+            if(first == null)
+                return;
+
+            _appliedSpells.Remove(first);
+        }
+
+        public void RemoveAllSpells()
+        {
+            _appliedSpells.Clear();
+        }
     }
 }

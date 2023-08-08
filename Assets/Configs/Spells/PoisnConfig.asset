@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b3868b5d8945dfa32e70d493f52408, type: 3}
+  m_Name: PoisnConfig
+  m_EditorClassIdentifier: 
+  _id: 4
+  _name: Poising
+  _description: Simple poisin spell
+  _icon: {fileID: 21300000, guid: b7d15c2c6f7d8254daeacdfe6570f35c, type: 3}
+  _manaCost: 23
+  _minDamage: 15
+  _maxDamage: 25
+  _applyStepsCount: 4
+  _spellType: 1

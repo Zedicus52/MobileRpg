@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: AttackConfig
   m_EditorClassIdentifier: 
   _attackMultiplier: 0.1
-  _baseAttack: 20
+  _baseAttack: 25

@@ -1,7 +1,9 @@
 using System;
 using MobileRpg.Factories.MonsterFactory;
 using MobileRpg.Interfaces;
+using MobileRpg.Player;
 using MobileRpg.ScriptableObjects;
+using MobileRpg.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,7 +24,7 @@ namespace MobileRpg.Core
 
         [Space] [Header("Player Behaviour configuration")] 
         [SerializeField] private PlayerConfig _playerConfig;
-        
+
 
         private void Awake()
         {
