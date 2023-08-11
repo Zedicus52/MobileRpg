@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3240580644945783260}
   - component: {fileID: 3739337465648377558}
+  - component: {fileID: 1862722731365304535}
   m_Layer: 0
   m_Name: GameBehaviour
   m_TagString: Untagged
@@ -47,3 +48,16 @@ MonoBehaviour:
   _wavesContainer: {fileID: 11400000, guid: f92b1e30afdc3d044921557565bf9696, type: 2}
   _monsterFactory: {fileID: 11400000, guid: 67206c8f445ddfe4b9784573b518fd2b, type: 2}
   _playerConfig: {fileID: 11400000, guid: 0c81d4e54f58c304299f85cb1a2aa7ca, type: 2}
+--- !u!114 &1862722731365304535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3441505923276905842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f750cfb795e4506978b9a5c2061ddd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _timeRemaining: 15.5

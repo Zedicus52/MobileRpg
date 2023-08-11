@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: AttackConfig
   m_EditorClassIdentifier: 
   _attackMultiplier: 0.1
+  _weapon: {fileID: 11400000, guid: 61d0cc970f0fcab439241fe7008d68db, type: 2}
   _baseAttack: 25

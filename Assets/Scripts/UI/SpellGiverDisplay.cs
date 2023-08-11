@@ -1,15 +1,16 @@
+using System;
 using System.Collections.Generic;
-using MobileRpg.Core;
 using MobileRpg.ScriptableObjects;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace MobileRpg.UI
 {
     public class SpellGiverDisplay : MonoBehaviour
     {
-        [SerializeField] private SpellGiver _spellsGiver;
+        public event Action EndedInteraction;
+        public event Action<SpellConfig> GotSpell;
+        
         [SerializeField] private Transform _rootPanel;
         [SerializeField] private GridLayoutGroup _spellsContainer;
         [SerializeField] private SpellDisplay _prefab;
@@ -19,24 +20,16 @@ namespace MobileRpg.UI
 
         private void OnEnable()
         {
-            _spellsGiver.ShowSpells += OnShowSpell;
             _closeButton.onClick.AddListener(OnClose);
         }
 
         private void OnDisable()
         {
-            _spellsGiver.ShowSpells -= OnShowSpell;
             _closeButton.onClick.RemoveListener(OnClose);
         }
         
-        private void OnShowSpell(List<SpellConfig> spells)
+        public void ShowSpells(List<SpellConfig> spells)
         {
-            float containerHeight = ((spells.Count / 2f) * _spellsContainer.cellSize.y) +
-                                    ((spells.Count / 2f) * _spellsContainer.spacing.y);
-
-            RectTransform r = ((RectTransform)_spellsContainer.transform);
-            r.sizeDelta = new Vector2(r.sizeDelta.x, containerHeight);
-
             foreach (SpellConfig config in spells)
             {
                 SpellDisplay display = Instantiate(_prefab, Vector3.zero, Quaternion.identity, _spellsContainer.transform);
@@ -55,12 +48,13 @@ namespace MobileRpg.UI
                 spell.Click -= OnSpellClick;
                 Destroy(spell.gameObject);
             }
-            _spellsGiver.EndInteraction();
+            EndedInteraction?.Invoke();
+            _spells.Clear();
         }
 
         private void OnSpellClick(SpellConfig config)
         {
-            _spellsGiver.GiveSpell(config);
+            GotSpell?.Invoke(config);
             OnClose();
         }
         

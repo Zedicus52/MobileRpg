@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MobileRpg.Core;
 using MobileRpg.Enums;
@@ -9,7 +10,9 @@ namespace MobileRpg.UI
 {
     public class BonusGiverDisplay : MonoBehaviour
     {
-        [SerializeField] private BonusGiver _bonusGiver;
+        public event Action EndedInteraction;
+        public event Action<BonusConfig> GotBonus;
+        
         [SerializeField] private Transform _rootPanel;
         [SerializeField] private Transform _bonusesContainer;
         [SerializeField] private BonusDisplay _prefab;
@@ -31,17 +34,15 @@ namespace MobileRpg.UI
 
         private void OnEnable()
         {
-            _bonusGiver.ShowBonuses += OnShowBonuses;
             _closeButton.onClick.AddListener(OnClose);
         }
 
         private void OnDisable()
         {
-            _bonusGiver.ShowBonuses -= OnShowBonuses;
             _closeButton.onClick.RemoveListener(OnClose);
         }
 
-        private void OnShowBonuses(List<BonusConfig> bonuses)
+        public void ShowBonuses(List<BonusConfig> bonuses)
         {
             foreach (BonusConfig bonusConfig in bonuses)
             {
@@ -78,7 +79,7 @@ namespace MobileRpg.UI
                 { BonusType.Mana , new List<BonusDisplay>()},
                 { BonusType.Escape, new List<BonusDisplay>()}
             };
-            _bonusGiver.EndInteraction();
+            EndedInteraction?.Invoke();
             _receivedBonusCount = 0;
         }
 
@@ -96,7 +97,7 @@ namespace MobileRpg.UI
                 }
             }
 
-            _bonusGiver.GiveBonus(config);
+            GotBonus?.Invoke(config);
             ++_receivedBonusCount;
             TryToEndInteraction();
         }

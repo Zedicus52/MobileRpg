@@ -1,55 +1,43 @@
 using System;
 using System.Collections.Generic;
 using MobileRpg.Enums;
-using MobileRpg.Interfaces;
 using MobileRpg.Player;
 using MobileRpg.ScriptableObjects;
-using UnityEngine;
+using MobileRpg.UI;
+using NotImplementedException = System.NotImplementedException;
 
-namespace MobileRpg.Core
+namespace MobileRpg.Givers
 {
-    public class BonusGiver : MonoBehaviour
+    public class BonusesGiver : Giver
     {
-        public event Action<List<BonusConfig>> ShowBonuses;
-        [SerializeField] private List<BonusConfig> _bonuses;
-        private PlayerBehaviour _playerBehaviour;
-        private IWavesHandler _wavesHandler;
+        private readonly BonusGiverDisplay _bonusGiverDisplay;
+        private readonly List<BonusConfig> _bonuses;
 
-        private void Awake()
+        public BonusesGiver(PlayerBehaviour playerBehaviour, BonusGiverDisplay display, List<BonusConfig> bonuses) : base(playerBehaviour)
         {
-            _playerBehaviour = GameBehaviour.Instance.PlayerBehaviour;
-            _wavesHandler = GameBehaviour.Instance.WavesHandler;
+            _bonusGiverDisplay = display;
+            _bonuses = bonuses;
+        }
+        
+
+        public override void StartInteraction()
+        {
+            _bonusGiverDisplay.ShowBonuses(_bonuses);
         }
 
-        private void OnEnable()
+        public override void Subscribe()
         {
-            _wavesHandler.NewWaveStarts += OnNewWaveStarts;
+            _bonusGiverDisplay.EndedInteraction += OnEndedInteraction;
+            _bonusGiverDisplay.GotBonus += OnGotBonus;
         }
 
-        private void OnDisable()
+        public override void UnSubscribe()
         {
-            _wavesHandler.NewWaveStarts -= OnNewWaveStarts;
+            _bonusGiverDisplay.EndedInteraction -= OnEndedInteraction;
+            _bonusGiverDisplay.GotBonus -= OnGotBonus;
         }
 
-
-        private void OnNewWaveStarts(int wave)
-        {
-            if(wave == 0)
-                return;
-            
-            if (wave % 3 == 0)
-            {
-                ShowBonuses?.Invoke(_bonuses);
-                _wavesHandler.PauseWavesSpawning();
-            }
-        }
-
-        public void EndInteraction()
-        {
-            _wavesHandler.ResumeWavesSpawning();
-        }
-
-        public void GiveBonus(BonusConfig config)
+        private void OnGotBonus(BonusConfig config)
         {
             PlayerEntity entity = _playerBehaviour.PlayerEntity;
             switch (config.EffectType)

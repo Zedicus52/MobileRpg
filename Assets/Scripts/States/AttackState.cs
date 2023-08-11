@@ -15,6 +15,7 @@ namespace MobileRpg.States
         
         public override void Attack()
         {
+            Debug.Log(_attackConfig.GetDamage());
             _entity.TakeDamage(_attackConfig.GetDamage());
             _switcher.SwitchState<WaitState>();
         }
@@ -33,7 +34,5 @@ namespace MobileRpg.States
         {
             
         }
-
-        
     }
 }

@@ -15,7 +15,9 @@ namespace MobileRpg.Player
         public event Action<float> ManaChanged;
         public event Action<float> MaxManaChanged;
 
-        public event Action<SpellConfig> SpellChanged; 
+        public event Action<SpellConfig> SpellChanged;
+
+        public event Action<WeaponConfig> WeaponChanged;
 
         public float GetCurrentHealth() => _currentHealth;
         public float GetCurrentMaxHealth() => _maxHealth;
@@ -23,8 +25,8 @@ namespace MobileRpg.Player
         public float GetCurrentMana() => _currentMana;
         public float GetCurrentEscapeChance() => _escapeChance;
         public SpellConfig GetCurrentSpell() => _currentSpell;
+        public WeaponConfig GetCurrentWeapon() => _currentWeapon;
         
-
         private readonly PlayerConfig _playerConfig;
         
         private float _maxHealth;
@@ -38,6 +40,7 @@ namespace MobileRpg.Player
         private int _currentGoldAmount;
 
         private SpellConfig _currentSpell;
+        private WeaponConfig _currentWeapon;
         public PlayerEntity(PlayerConfig playerConfig)
         {
             _playerConfig = playerConfig;
@@ -48,6 +51,7 @@ namespace MobileRpg.Player
             _escapeChance = playerConfig.GetEscapeConfig().GetChanceToEscape();
             _currentGoldAmount = 0;
             _currentSpell = playerConfig.GetMagicConfig().GetCurrentSpell();
+            _currentWeapon = playerConfig.GetAttackConfig().GetWeapon();
         }
 
         public void AddGold(int gold)
@@ -118,6 +122,12 @@ namespace MobileRpg.Player
         {
             _currentSpell = config;
             SpellChanged?.Invoke(config);
+        }
+        
+        public void UpdateWeapon(WeaponConfig config)
+        {
+            _currentWeapon = config;
+            WeaponChanged?.Invoke(config);
         }
         
     }

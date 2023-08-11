@@ -1,18 +1,16 @@
-using System;
 using MobileRpg.Factories.MonsterFactory;
 using MobileRpg.Interfaces;
 using MobileRpg.Player;
 using MobileRpg.ScriptableObjects;
-using MobileRpg.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace MobileRpg.Core
 {
+    [RequireComponent(typeof(Timer))]
     public class GameBehaviour : MonoBehaviour
     {
         public static GameBehaviour Instance { get; private set; }
-        
         public PlayerBehaviour PlayerBehaviour { get; private set; }
         public MonstersBehaviour MonstersBehaviour { get; private set; }
         
@@ -24,7 +22,7 @@ namespace MobileRpg.Core
 
         [Space] [Header("Player Behaviour configuration")] 
         [SerializeField] private PlayerConfig _playerConfig;
-
+        
 
         private void Awake()
         {
@@ -41,9 +39,11 @@ namespace MobileRpg.Core
 
         private void Initialize()
         {
+            var timer = GetComponent<Timer>();
+            
             WavesHandler = new WavesHandler(_wavesContainer, _monsterFactory);
             
-            PlayerBehaviour = new PlayerBehaviour(_playerConfig);
+            PlayerBehaviour = new PlayerBehaviour(_playerConfig,timer);
             MonstersBehaviour = new MonstersBehaviour(PlayerBehaviour, WavesHandler);
             MonstersBehaviour.Subscribe();
             
